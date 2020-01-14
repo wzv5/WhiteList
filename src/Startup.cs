@@ -25,8 +25,7 @@ namespace whitelist
                 var token = configuration["token"];
                 var file = configuration["file"];
                 var nginx = configuration["nginx"];
-                var bark = configuration["bark"];
-                if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(file) || string.IsNullOrEmpty(nginx) || string.IsNullOrEmpty(bark))
+                if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(file) || string.IsNullOrEmpty(nginx))
                 {
                     throw new ArgumentNullException();
                 }
