@@ -115,13 +115,19 @@ namespace whitelist.Services
                 return;
             }
             
-            using (var p1 = Process.Start(_nginx, "-t"))
+            var psi = new ProcessStartInfo();
+            psi.FileName = _nginx;
+            psi.WorkingDirectory = Path.GetDirectoryName(_nginx);
+            _logger.LogInformation(psi.WorkingDirectory);
+            psi.Arguments = "-t";
+            using (var p1 = Process.Start(psi))
             {
                 p1.WaitForExit();
                 if (p1.ExitCode == 0)
                 {
                     _logger.LogInformation("新的配置文件测试通过");
-                    using (var p2 = Process.Start(_nginx, "-s reload"))
+                    psi.Arguments = "-s reload";
+                    using (var p2 = Process.Start(psi))
                     {
                         p2.WaitForExit();
                         if (p2.ExitCode == 0)
