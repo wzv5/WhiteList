@@ -118,7 +118,6 @@ namespace whitelist.Services
             var psi = new ProcessStartInfo();
             psi.FileName = _nginx;
             psi.WorkingDirectory = Path.GetDirectoryName(_nginx);
-            _logger.LogInformation(psi.WorkingDirectory);
             psi.Arguments = "-t";
             using (var p1 = Process.Start(psi))
             {
