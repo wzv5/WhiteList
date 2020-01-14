@@ -1,0 +1,7 @@
+[mywhitelist]
+enabled = true
+backend = systemd
+filter = mywhitelist
+port = http,https
+maxretry = 3
+bantime = 3600
