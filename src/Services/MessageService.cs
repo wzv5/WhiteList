@@ -27,6 +27,10 @@ namespace whitelist.Services
         public void Send(string msg)
         {
             _logger.LogInformation("发送消息：{0}", msg);
+            if (string.IsNullOrEmpty(_bark))
+            {
+                return;
+            }
             try
             {
                 var url = string.Format("{0}/{1}", _bark, msg);
