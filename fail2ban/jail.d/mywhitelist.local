@@ -4,4 +4,5 @@ backend = systemd
 filter = mywhitelist
 port = http,https
 maxretry = 3
-bantime = 3600
+bantime = 604800
+findtime  = 7200
