@@ -13,8 +13,8 @@ namespace whitelist.Services
 
     public class DefaultMessageService : IMessageService
     {
-        private ILogger _logger;
-        private string _bark;
+        private readonly ILogger _logger;
+        private readonly string _bark;
         private static readonly HttpClient client = new HttpClient();
 
         public DefaultMessageService(ILogger<DefaultMessageService> logger, IConfiguration config)

@@ -18,14 +18,14 @@ namespace whitelist.Services
 
     public class DefaultWhiteListService : IWhiteListService
     {
-        private TimeSpan _timeout = TimeSpan.FromHours(1);
-        private Dictionary<IPAddress, DateTime> _list = new Dictionary<IPAddress, DateTime>();
+        private readonly TimeSpan _timeout = TimeSpan.FromHours(1);
+        private readonly Dictionary<IPAddress, DateTime> _list = new Dictionary<IPAddress, DateTime>();
         private List<IPAddress> _lastlist = new List<IPAddress>();
-        private Timer _timer;
-        private string _listfile;
-        private string _nginx;
-        private ILogger _logger;
-        private IMessageService _msg;
+        private readonly Timer _timer;
+        private readonly string _listfile;
+        private readonly string _nginx;
+        private readonly ILogger _logger;
+        private readonly IMessageService _msg;
         
         public DefaultWhiteListService(ILogger<DefaultWhiteListService> logger, IConfiguration config, IMessageService msg)
         {
