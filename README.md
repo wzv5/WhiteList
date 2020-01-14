@@ -1,6 +1,7 @@
 # nginx 动态 IP 白名单
 
 通过动态生成 nginx 配置的方式来实现 IP 白名单。
+
 （没什么技术含量，只是学习和尝试一下 ASP.NET Core）
 
 ## 依赖
@@ -14,6 +15,7 @@
 2. file：要写出的 nginx 配置文件名
 3. nginx：nginx 程序路径
 4. bark：bark 消息通知网址，末尾不要带 `/`，留空将不发送消息
+5. urls: 配置 asp.net core 的监听网址
 
 把配置写入 `src/appsettings.json` 或 `src/appsettings.Development.json`。
 
