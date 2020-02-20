@@ -16,6 +16,8 @@
 3. nginx：nginx 程序路径
 4. bark：bark 消息通知网址，末尾不要带 `/`，留空将不发送消息
 5. urls: 配置 asp.net core 的监听网址
+6. baidumap_ak: 百度地图 API ak（用于 IP 定位）
+7. baidumap_refer: 百度地图 API referer
 
 把配置写入 `src/appsettings.json` 或 `src/appsettings.Development.json`。
 
@@ -35,7 +37,9 @@
   "token": "xxx",
   "file": "/etc/nginx/whitelist.conf",
   "nginx":  "/usr/sbin/nginx",
-  "bark": "https://xxx.com/token/WhiteList"
+  "bark": "https://xxx.com/token/WhiteList",
+  "baidumap_ak": "xxx",
+  "baidumap_refer": "https://xxx.com/"
 }
 
 ```

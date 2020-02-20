@@ -44,6 +44,7 @@ namespace whitelist
             services.AddControllers();
             services.AddSingleton<IWhiteListService, DefaultWhiteListService>();
             services.AddSingleton<IMessageService, DefaultMessageService>();
+            services.AddSingleton<ILocationService, BaiduLocationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

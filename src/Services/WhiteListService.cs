@@ -26,13 +26,15 @@ namespace whitelist.Services
         private readonly string _nginx;
         private readonly ILogger _logger;
         private readonly IMessageService _msg;
+        private readonly ILocationService _location;
         
-        public DefaultWhiteListService(ILogger<DefaultWhiteListService> logger, IConfiguration config, IMessageService msg)
+        public DefaultWhiteListService(ILogger<DefaultWhiteListService> logger, IConfiguration config, IMessageService msg, ILocationService location)
         {
             _listfile = config["file"];
             _nginx = config["nginx"];
             _logger = logger;
             _msg = msg;
+            _location = location;
             _timer = new Timer(OnTimer, null, 0, 15000);
 
             _logger.LogInformation("WhiteListService 已启动");
@@ -79,7 +81,20 @@ namespace whitelist.Services
                     OnListChanged(curlist);
                     if (newip.Length > 0)
                     {
-                        _msg.Send(string.Join("; ", newip.AsEnumerable()));
+                        var iplist = new List<string>();
+                        foreach (var item in newip)
+                        {
+                            var addr = _location.GetLocationFromIP(item).Result;
+                            if (string.IsNullOrEmpty(addr))
+                            {
+                                iplist.Add(item.ToString());
+                            }
+                            else
+                            {
+                                iplist.Add($"{item}({addr})");
+                            }
+                        }
+                        _msg.Send(string.Join("; ", iplist));
                     }
                 }
             }
