@@ -37,6 +37,9 @@ namespace whitelist.Services
             _location = location;
             _timer = new Timer(OnTimer, null, 0, 15000);
 
+            // 启动时写出一个空白配置
+            OnListChanged(new List<IPAddress>());
+
             _logger.LogInformation("WhiteListService 已启动");
         }
 
