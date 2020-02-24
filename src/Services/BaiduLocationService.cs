@@ -26,6 +26,15 @@ namespace whitelist.Services
             _logger = logger;
             _baidu_ak = config["baidumap_ak"];
             _baidu_refer = config["baidumap_refer"];
+
+            // 如果缺少参数，则跳过初始化
+            if (string.IsNullOrEmpty(_baidu_ak) || string.IsNullOrEmpty(_baidu_refer))
+            {
+                _baidu_ak = null;
+                _baidu_refer = null;
+                return;
+            }
+
             client.Timeout = TimeSpan.FromSeconds(30);
             client.BaseAddress = new Uri("https://api.map.baidu.com/location/ip");
             client.DefaultRequestHeaders.Referrer = new Uri(_baidu_refer);
