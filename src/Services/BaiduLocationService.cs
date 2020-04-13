@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -17,6 +18,7 @@ namespace whitelist.Services
     public class BaiduLocationService : ILocationService
     {
         private readonly ILogger _logger;
+        private readonly IMemoryCache _cache;
         private readonly string _baidu_ak;
         private readonly string _baidu_refer;
         private static readonly HttpClient client = new HttpClient();
@@ -38,10 +40,20 @@ namespace whitelist.Services
             client.Timeout = TimeSpan.FromSeconds(30);
             client.BaseAddress = new Uri("https://api.map.baidu.com/location/ip");
             client.DefaultRequestHeaders.Referrer = new Uri(_baidu_refer);
+
+            _cache = new MemoryCache(new MemoryCacheOptions
+            {
+                SizeLimit = 50
+            });
         }
         
         public async Task<string> GetLocationFromIP(IPAddress ip)
         {
+            if (_cache.TryGetValue(ip, out String addr))
+            {
+                _logger.LogDebug($"从缓存获取 {ip} 的位置为 {addr}");
+                return addr;
+            }
             if (ip.AddressFamily != AddressFamily.InterNetwork || string.IsNullOrEmpty(_baidu_ak))
             {
                 return "";
@@ -54,11 +66,18 @@ namespace whitelist.Services
                 var status = doc.RootElement.GetProperty("status").GetInt32();
                 if (status == 0)
                 {
-                    return doc.RootElement.GetProperty("content").GetProperty("address").GetString();
+                    var address = doc.RootElement.GetProperty("content").GetProperty("address").GetString();
+                    _logger.LogDebug($"联网获取 {ip} 的位置为 {address}");
+                    _cache.Set(ip, address, new MemoryCacheEntryOptions() {
+                        Size = 1,
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
+                    });
+                    return address;
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
+                _logger.LogError(e, $"联网获取 {ip} 的位置失败");
             }
             return "";
         }
