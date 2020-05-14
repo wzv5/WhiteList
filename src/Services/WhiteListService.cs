@@ -24,6 +24,8 @@ namespace whitelist.Services
         private readonly Timer _timer;
         private readonly string _listfile;
         private readonly string _nginx;
+        private readonly string _remote_addr_var;
+
         private readonly ILogger _logger;
         private readonly IMessageService _msg;
         private readonly ILocationService _location;
@@ -32,6 +34,11 @@ namespace whitelist.Services
         {
             _listfile = config["file"];
             _nginx = config["nginx"];
+            _remote_addr_var = config["remote_addr_var"];
+            if (string.IsNullOrEmpty(_remote_addr_var))
+            {
+                _remote_addr_var = "remote_addr";
+            }
             _logger = logger;
             _msg = msg;
             _location = location;
@@ -115,7 +122,9 @@ namespace whitelist.Services
             }
             
             var sb = new StringBuilder();
-            sb.AppendLine("geo $remote_addr $ip_whitelist {");
+            sb.Append("geo $");
+            sb.Append(_remote_addr_var);
+            sb.AppendLine(" $ip_whitelist {");
             sb.AppendLine("default 0;");
             foreach (var item in list)
             {

@@ -18,6 +18,7 @@
 5. urls: 配置 asp.net core 的监听网址
 6. baidumap_ak: 百度地图 API ak（可选，用于 IP 定位）
 7. baidumap_refer: 百度地图 API referer
+8. remote_addr_var: nginx 中存储客户端 IP 的变量名，用于兼容 CDN 或其他反代，可选，默认为 `remote_addr`
 
 把配置写入 `src/appsettings.json` 或 `src/appsettings.Development.json`。
 
@@ -39,7 +40,8 @@
   "nginx":  "/usr/sbin/nginx",
   "bark": "https://xxx.com/token/WhiteList",
   "baidumap_ak": "xxx",
-  "baidumap_refer": "https://xxx.com/"
+  "baidumap_refer": "https://xxx.com/",
+  "remote_addr_var": "my_real_ip"
 }
 
 ```
