@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System.IO;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using whitelist.Controllers;
+using whitelist.Services;
 
 namespace whitelist
 {
@@ -13,14 +11,33 @@ namespace whitelist
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            var builder = WebApplication.CreateSlimBuilder(args);
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+            // 检查配置
+            var configuration = builder.Configuration;
+            var token = configuration["token"];
+            var file = configuration["file"];
+            var nginx = configuration["nginx"];
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(file) || string.IsNullOrEmpty(nginx))
+            {
+                throw new ArgumentNullException();
+            }
+            if (!File.Exists(nginx))
+            {
+                throw new FileNotFoundException(nginx);
+            }
+
+            // 配置服务
+            var services = builder.Services;
+            services.AddSingleton<IWhiteListService, DefaultWhiteListService>();
+            services.AddSingleton<IMessageService, DefaultMessageService>();
+            services.AddSingleton<ILocationService, BaiduLocationService>();
+            var app = builder.Build();
+
+            // 配置路由
+            app.MapGroup("/a").MapWhiteListApi(app.Services);
+
+            app.Run();
+        }
     }
 }
