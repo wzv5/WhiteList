@@ -1,13 +1,15 @@
 # nginx 动态 IP 白名单
 
+**已废弃，请使用 <https://github.com/wzv5/whitelist_rs>**
+
 通过动态生成 nginx 配置的方式来实现 IP 白名单。
 
 （没什么技术含量，只是学习和尝试一下 ASP.NET Core）
 
 ## 依赖
 
-* .NET Core 3.1
-* ASP.NET Core 3.1
+* .NET 8
+* ASP.NET Core 8
 
 ## 配置
 
