@@ -15,7 +15,7 @@ namespace whitelist.Controllers
     {
         public static void MapWhiteListApi(this RouteGroupBuilder group, IServiceProvider services)
         {
-            var controller = ActivatorUtilities.CreateInstance(services, typeof(WhiteListController)) as WhiteListController;
+            var controller = ActivatorUtilities.CreateInstance<WhiteListController>(services);
             group.MapGet("/", controller.Get);
             // ASP0016
             group.MapPost("/", (Delegate)controller.Post);
